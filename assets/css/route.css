@@ -1,0 +1,12 @@
+/* 路由过渡动效 */
+
+/*
+下面的配置是全局的
+如果想给某个页面自定义过渡特效的话，只要在该页面组件中配置 transition 字段即可
+*/
+.page-enter-active, .page-leave-active {
+  transition: opacity .5s;
+}
+.page-enter, .page-leave-active {
+  opacity: 0;
+}

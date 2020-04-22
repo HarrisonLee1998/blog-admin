@@ -1,0 +1,20 @@
+/* 滚动条配置 */
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f5f6fa;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #9d9d9e;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #9d9d9e;
+}
