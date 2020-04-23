@@ -12,9 +12,51 @@
       </v-col>
     </v-row>
     <v-row justify="space-between" justify-md="end">
-      <v-btn class="ma-2" outlined color="indigo">发布文章</v-btn>
+      <v-btn class="ma-2" outlined color="indigo" @click="dialog = true"
+        >发布文章</v-btn
+      >
       <v-btn class="ma-2">保存为草稿</v-btn>
     </v-row>
+    <v-dialog v-model="dialog" persistent max-width="400px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">文章属性设置</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-select
+                v-model="blog.archiveTitle"
+                :items="archives"
+                label="归档"
+              ></v-select>
+            </v-row>
+            <v-row>
+              <v-text-field
+                v-model="tagStr"
+                label="标签"
+                hint="以’#‘分隔"
+                @blur="handleTags"
+              ></v-text-field>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-checkbox v-model="isOpen" label="是否公开"></v-checkbox>
+              </v-col>
+              <v-col>
+                <v-checkbox v-model="isReward" label="是否打赏"></v-checkbox>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialog = false">取消</v-btn>
+          <v-btn color="blue darken-1" text @click="ok">发布</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <div id="test" style="box-shadown:none;" v-html="blog.html"></div>
   </v-container>
 </template>
 
@@ -34,7 +76,7 @@ export default {
         archiveTitle: '',
         tags: []
       },
-      modal1: false,
+      dialog: false,
       tagStr: '',
       archives: [],
       isOpen: true,
@@ -76,6 +118,7 @@ export default {
       if (!isValid) {
         return
       }
+      this.blog.title = this.blog.title.trim()
       this.blog.isOpen = this.isOpen ? 1 : 0
       this.blog.isReward = this.isReward ? 1 : 0
       this.$axios({
@@ -86,9 +129,11 @@ export default {
       }).then((res) => {
         if (res.data.status === 'OK') {
           // 弹出成功消息
+          this.$notifier.showMessage({ content: '发布成功', color: 'success' })
           this.clearBlog()
         } else {
           // 弹出错误消息
+          this.$notifier.showMessage({ content: '发布失败', color: 'error' })
         }
       })
     },
@@ -104,13 +149,17 @@ export default {
         err = '文章标题不能为空'
       } else if (this.blog.markdown.trim() === '') {
         err = '文章内容不能为空'
-      } else if (this.blog.archive === '') {
+      } else if (
+        this.blog.archiveTitle === undefined &&
+        this.blog.archiveTitle.trim() === ''
+      ) {
         err = '文章归档不能为空'
       } else if (this.blog.tags.length === 0) {
         err = '文章标签不能为空'
       }
       if (err !== '') {
         // 弹出错误消息
+        this.$notifier.showMessage({ content: err, color: 'error' })
         return false
       } else {
         return true
@@ -122,12 +171,16 @@ export default {
       if (archives === undefined || archives.length === 0) {
         this.getArchivesFromServer()
       } else {
-        this.archives = archives
+        archives.forEach((a) => {
+          this.archives.push(a.title)
+        })
       }
     },
     getArchivesFromServer() {
       this.$axios.get('/api/admin/archive').then((res) => {
-        this.archives = res.data.map.archives
+        res.data.map.archives.forEach((a) => {
+          this.archives.push(a.title)
+        })
         this.$store.commit('archive/setArchives', res.data.map.archives)
       })
     }
@@ -136,4 +189,11 @@ export default {
 </script>
 
 //
-<style lang="css"></style>
+<style lang="css">
+textarea,
+pre {
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+}
+</style>

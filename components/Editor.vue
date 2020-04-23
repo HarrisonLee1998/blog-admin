@@ -34,14 +34,13 @@
     <div class="my-2">
       <v-btn @click="dialog = !dialog">附加设置</v-btn>
     </div>
-    <client-only>
+    <client-only placeholder="Loading...">
       <mavonEditor
         id="mavon-editor"
         ref="md"
         v-model="markdown"
         :tab-size="tabSize"
         :toolbars-flag="true"
-        :ishijs="true"
         :code-style="codeStyle"
         :subfield="false"
         :autofocus="false"
@@ -159,6 +158,7 @@ export default {
           // 这是你的markdown css文件路径
           // return 'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css';
           return 'https://cdn.bootcss.com/github-markdown-css/4.0.0/github-markdown.min.css'
+          // return 'https://cdn.harrisonlee.net/onedark.css'
         },
         hljs_js() {
           // 这是你的hljs文件路径

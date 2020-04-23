@@ -180,12 +180,24 @@ export default {
   },
   watch: {
     isDark() {
-      if (process.client) {
-        this.$vuetify.theme.dark = this.isDark
-      }
+      // if (process.client) {
+      //   this.$vuetify.theme.dark = this.isDark
+      // }
+      this.$vuetify.theme.dark = this.isDark
+      this.$store.commit('theme/toggleTheme', this.isDark)
     }
   },
-  created() {},
+  created() {
+    const date = new Date()
+    const h = date.getHours()
+    if (h > 18 || h < 7) {
+      this.$vuetify.theme.dark = true
+      this.isDark = true
+    } else {
+      this.$vuetify.theme.dark = false
+      this.isDark = false
+    }
+  },
   beforeDestroy() {},
   methods: {}
 }

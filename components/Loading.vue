@@ -1,8 +1,13 @@
 <template>
-  <div v-if="loading" class="loading-page">
-    <div class="wrapper">
-      <div class="rubik-loader" />
-    </div>
+  <div v-if="loading" id="loading" :class="isDark ? 'dark' : 'light'">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
   </div>
 </template>
 
@@ -11,10 +16,15 @@ export default {
   data: () => ({
     loading: false,
     timer: null,
-    msg: 'Loading',
-    msg1: '',
-    count: 0
+    isDark: false
   }),
+  created() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'theme/toggleTheme') {
+        this.isDark = state.theme.isDark
+      }
+    })
+  },
   methods: {
     start() {
       this.loading = true
@@ -29,54 +39,84 @@ export default {
     },
     clearTimer() {
       clearInterval(this.timer)
-    },
-    setMsg() {
-      const dot = ['', '.', '..', '...']
-      this.msg1 = dot[this.count % dot.length]
-      this.count++
     }
   }
 }
-
-/*
-.loading-page
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgb(255,255,255,1);
-  text-align: center;
-  padding-top: 200px;
-  font-size: 30px;
-  font-family: sans-serif;
-  font-style: italic;
-*/
 </script>
 
 <style lang="css" scoped>
-* {
-  box-sizing: border-box;
-}
-
-.wrapper {
+#loading {
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
   bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 11;
+}
+.dark {
+  background-color: #000;
+}
+.dark li {
   background-color: #fff;
 }
 
-.rubik-loader {
-  width: 64px;
-  height: 64px;
+.light {
+  background-color: #fff;
+}
+
+.light li {
+  background-color: #000;
+}
+
+ul {
   position: absolute;
-  left: 50%;
   top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  background-image: url(http://i.giphy.com/3og0ISeflb7vrNzy2A.gif);
-  background-repeat: no-repeat;
-  background-position: center;
+  display: flex;
+}
+ul li {
+  list-style: none;
+  width: 6px;
+  height: 20px;
+  margin: 0 4px;
+  animation: animate 0.7s infinite alternate;
+}
+
+@keyframes animate {
+  0% {
+    transform: scaleY(1);
+  }
+  25% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+  75% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(3);
+  }
+}
+
+ul li:nth-child(1) {
+  animation-delay: 0.1s;
+}
+ul li:nth-child(2) {
+  animation-delay: 0.2s;
+}
+ul li:nth-child(3) {
+  animation-delay: 0.3s;
+}
+ul li:nth-child(4) {
+  animation-delay: 0.4s;
+}
+ul li:nth-child(5) {
+  animation-delay: 0.5s;
+}
+ul li:nth-child(6) {
+  animation-delay: 0.6s;
 }
 </style>
