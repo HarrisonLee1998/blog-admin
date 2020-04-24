@@ -4,7 +4,7 @@ html, body {
 
 @font-face{
   font-family: 'HackBold';
-  src: url('../font/Hack-Bold.ttf') format('truetype');
+  src: url('https://cdn.harrisonlee.net/Hack-Bold.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -26,6 +26,7 @@ body {
 pre, code {
   font-size: 14px;
   font-family: 'HackBold';
+  overflow: auto;
 }
 
 h1,
@@ -36,4 +37,15 @@ h5,
 h6 {
   font-size: 14px;
   font-weight: normal;
+}
+
+.article-title{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: inherit;
+}
+
+.v-list-item p {
+  margin: 0 !important;
 }

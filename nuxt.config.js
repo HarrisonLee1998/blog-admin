@@ -17,7 +17,19 @@ module.exports = {
         content: process.env.npm_package_description || ''
       }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        href:
+          'https://cdn.bootcss.com/github-markdown-css/4.0.0/github-markdown.min.css'
+      },
+      {
+        rel: 'stylesheet',
+        href:
+          'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.0/styles/solarized-light.min.css'
+      }
+    ]
   },
   server: {
     host: '0.0.0.0',
@@ -39,15 +51,25 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['@/plugins/axios', '@/plugins/icons', '@/plugins/notifier'],
+  plugins: [
+    '@/plugins/axios',
+    '@/plugins/icons',
+    '@/plugins/notifier',
+    '@/plugins/highlight',
+    '@/plugins/katex'
+  ],
   /*
    ** Nuxt.js dev-modules
    */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
-    '@nuxtjs/vuetify'
+    '@nuxtjs/vuetify',
+    '@nuxtjs/moment'
   ],
+  moment: {
+    defaultTimezone: 'America/Los_Angeles'
+  },
   /*
    ** Nuxt.js modules
    */
@@ -89,6 +111,13 @@ module.exports = {
     middleware: ['auth', 'device'],
     scrollBehavior(to, from, savedPosition) {
       return { x: 0, y: 0 }
+    },
+    extendRoutes(routes, resolve) {
+      routes.push({
+        name: 'custom',
+        path: '*',
+        component: resolve(__dirname, 'pages/404.vue')
+      })
     }
   },
   /*

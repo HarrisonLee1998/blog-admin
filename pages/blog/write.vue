@@ -136,12 +136,19 @@ export default {
           this.$notifier.showMessage({ content: '发布失败', color: 'error' })
         }
       })
+      this.dialog = false
     },
     handleTags() {
       const ts = this.tagStr.split('#')
       let rs = ts.filter((t) => t.trim() !== '')
       rs = rs.map((t) => t.trim())
       this.blog.tags = rs
+    },
+    validateTag() {
+      /*
+        1. 标签中间不能有空格
+        2. 标签不能重复
+      */
     },
     validate() {
       let err = ''

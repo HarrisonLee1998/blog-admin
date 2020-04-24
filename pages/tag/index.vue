@@ -1,18 +1,17 @@
 <template>
-  <v-container>
-    <div class="text-center">
-      <v-chip
+  <div>
+    <div id="tag-overview">共有{{ tags.length }}个标签</div>
+    <div>
+      <nuxt-link
         v-for="tag in tags"
         :key="tag.id"
-        class="ma-2"
-        color="secondary"
-        link
-        :href="'/tag/entry/' + tag.id"
+        :to="'/tag/' + tag.title"
+        class="tag-link"
         v-text="tag.title + '(' + tag.articleNums + ')'"
-      >
-      </v-chip>
+      ></nuxt-link>
+      <!-- :class="isDark ? 'dark' : 'light'" -->
     </div>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -22,8 +21,45 @@ export default {
     return { tags: data.map.tags }
   },
   data() {
-    return {}
+    return {
+      isDark: false
+    }
   },
-  methods: {}
+  created() {
+    // this.$store.subscribe((mutation, state) => {
+    //   if (mutation.type === 'theme/toggleTheme') {
+    //     this.isDark = state.theme.isDark
+    //   }
+    // })
+  }
 }
 </script>
+
+<style scoped>
+#tag-overview {
+  height: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  text-align: right;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 3%;
+}
+.tag-link {
+  color: inherit;
+}
+a {
+  display: inline-block;
+  background-color: inherit;
+  margin: 5px 2%;
+  overflow-wrap: break-word;
+  text-decoration: none;
+  font-family: 'Microsoft YaHei';
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5rem;
+}
+a:hover {
+  transform: scale(1.2);
+  transition: all 0.3s linear;
+}
+</style>

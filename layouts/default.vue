@@ -9,7 +9,7 @@
     >
       <v-img
         :aspect-ratio="16 / 9"
-        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+        src="https://cdn.harrisonlee.net/material.png"
       >
         <v-row align="center" class="lightbox white--text pa-2 fill-height">
           <v-col align="center">
@@ -187,7 +187,7 @@ export default {
       this.$store.commit('theme/toggleTheme', this.isDark)
     }
   },
-  created() {
+  mounted() {
     const date = new Date()
     const h = date.getHours()
     if (h > 18 || h < 7) {
