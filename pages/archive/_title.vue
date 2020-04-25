@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <v-row class="d-flex d-sm-none">
+      <v-img :src="archive.imgUrl"></v-img>
+    </v-row>
     <v-row class="title" justify="end">
       <v-col cols="auto"> <v-icon>folder</v-icon> {{ title }} </v-col>
     </v-row>
@@ -9,13 +12,13 @@
       :key="article.id"
       justify="space-between"
     >
-      <v-col cols="12" lg="8">
+      <v-col cols="12" lg="8" xl="8">
         <v-list-item nuxt :to="'/blog/entry/' + article.id" max-width="100%">
           <p class="article-title" v-text="article.title"></p>
         </v-list-item>
       </v-col>
       <v-col
-        cols="2"
+        cols="auto"
         class="d-none d-lg-flex d-xl-flex"
         :title="$moment(article.lastUpdateDate).format('YYYY/MM/DD HH:mm:ss')"
         v-text="$moment(article.lastUpdateDate).format('YYYY/MM/DD')"
@@ -44,10 +47,18 @@ export default {
       redirect('/404')
     } else {
       // 分页大小为10条数据
-      const { data } = await $axios.get(
-        encodeURI(`/api/admin/article/archive/${title}/1/10`)
-      )
-      return { pageInfo: data.map.pageInfo, title }
+      // const { data } = await $axios.get(
+      //   encodeURI(`/api/admin/article/archive/${title}/1/10`)
+      // )
+      const [res1, res2] = await Promise.all([
+        $axios.get(encodeURI(`/api/admin/article/archive/${title}/1/10`)),
+        $axios.get(encodeURI(`/api/admin/archive/${title}`))
+      ])
+      return {
+        pageInfo: res1.data.map.pageInfo,
+        archive: res2.data.map.archive,
+        title
+      }
     }
   },
   data() {

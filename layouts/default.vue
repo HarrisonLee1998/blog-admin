@@ -137,7 +137,7 @@ export default {
           items: []
         },
         {
-          action: 'assignment',
+          action: 'edit',
           title: '博客',
           items: [
             { title: '写博客', link: '/blog/write' },
@@ -146,12 +146,19 @@ export default {
           ]
         },
         {
-          action: 'archive',
-          title: '归档/标签',
-          no: '3',
+          action: 'folder',
+          title: '归档',
           items: [
-            { title: '归档管理', link: '/archive' },
-            { title: '标签管理', link: '/tag' }
+            { title: '查看归档', link: '/archive' },
+            { title: '归档管理', link: '/archive/manage' }
+          ]
+        },
+        {
+          action: 'local_offer',
+          title: '标签',
+          items: [
+            { title: '查看标签', link: '/tag' },
+            { title: '标签管理', link: '/tag/manage' }
           ]
         },
         {

@@ -7,15 +7,15 @@
     <v-row
       v-for="article in pageInfo.list"
       :key="article.id"
-      justify-space-between
+      justify="space-between"
     >
-      <v-col cols="12" lg="8">
+      <v-col cols="12" lg="8" xl="8">
         <v-list-item nuxt :to="'/blog/entry/' + article.id" max-width="100%">
           <p class="article-title" v-text="article.title"></p>
         </v-list-item>
       </v-col>
       <v-col
-        lg="2"
+        cols="auto"
         class="d-none d-lg-flex d-xl-flex"
         :title="$moment(article.lastUpdateDate).format('YYYY/MM/DD HH:mm:ss')"
         v-text="$moment(article.lastUpdateDate).format('YYYY/MM/DD')"
