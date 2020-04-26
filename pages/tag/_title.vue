@@ -72,6 +72,11 @@ export default {
           console.log(res)
         })
     }
+  },
+  head() {
+    return {
+      title: '标签详情: ' + this.title
+    }
   }
 }
 </script>

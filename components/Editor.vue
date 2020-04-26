@@ -46,7 +46,12 @@
         :autofocus="false"
         :toolbars="markdownOption"
         :external-link="externalLink"
+        :box-shadow="false"
         style="height: 580px;"
+        :toolbars-background="isDark ? '#000' : '#fff'"
+        :editor-background="isDark ? '#000' : '#fff'"
+        :preview-background="isDark ? '#000' : '#fff'"
+        :class="isDark ? 'dark' : 'light'"
         @change="postContent"
         @imgAdd="imgAdd"
         @imgDel="imgDel"
@@ -158,7 +163,7 @@ export default {
           // 这是你的markdown css文件路径
           // return 'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css';
           return 'https://cdn.bootcss.com/github-markdown-css/4.0.0/github-markdown.min.css'
-          // return 'https://cdn.harrisonlee.net/onedark.css'
+          // return 'http://127.0.0.1:3001/github-markdown.css'
         },
         hljs_js() {
           // 这是你的hljs文件路径
@@ -205,11 +210,18 @@ export default {
       file: undefined,
       fileAddr: '',
       timer: '',
-      dialog: false
+      dialog: false,
+      isDark: false
     }
   },
-  mounted() {
+  beforeMount() {
     this.getQiniuUploadInfoFromStore()
+    this.isDark = this.$store.getters['theme/getTheme']
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'theme/toggleTheme') {
+        this.isDark = state.theme.isDark
+      }
+    })
   },
   beforeDestroy() {
     clearTimeout(this.timer)
@@ -305,13 +317,22 @@ export default {
   padding: 0 !important;
 }
 
-/* .v-input__slot {
-  margin-bottom: 0 !important;
-  position: relative;
+.dark {
+  color: #fff;
 }
-.v-input__slot::before,
-.v-input__slot::after {
-  position: absolute;
-  bottom: -2px;
-} */
+.light {
+  color: #000;
+}
+
+.v-note-wrapper,
+.v-note-edit,
+.auto-textarea-input {
+  border: none !important;
+  background-color: inherit !important;
+  color: inherit !important;
+}
+
+.content-input-wrapper {
+  height: 100%;
+}
 </style>

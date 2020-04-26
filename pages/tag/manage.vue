@@ -29,7 +29,32 @@
               <v-divider class="mx-4" inset vertical></v-divider>
               <v-spacer></v-spacer>
               <v-dialog v-model="dialog" max-width="500px">
+                <template v-slot:activator="{ on }">
+                  <v-btn color="primary" dark v-on="on">删除无效标签</v-btn>
+                </template>
                 <v-card>
+                  <v-card-title>
+                    <span class="headline">确认删除无效标签</span>
+                  </v-card-title>
+                  <v-card-text>
+                    <v-row>
+                      <v-col>
+                        <p>无效标签是指文章关联数为0的标签</p>
+                        <p>此操作不可逆, 请谨慎操作！！！</p>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="close"
+                      >Cancel</v-btn
+                    >
+                    <v-btn color="blue darken-1" text @click="deleteTag"
+                      >OK</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+                <!-- <v-card>
                   <v-card-title>
                     <span class="headline">修改标签名称</span>
                   </v-card-title>
@@ -68,15 +93,15 @@
                     >
                     <v-btn color="blue darken-1" text @click="save">Save</v-btn>
                   </v-card-actions>
-                </v-card>
+                </v-card> -->
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <!-- <template v-slot:item.actions="{ item }">
             <v-icon small class="mr-2" @click="editItem(item)">
               mdi-pencil
             </v-icon>
-          </template>
+          </template> -->
         </v-data-table>
       </v-card>
     </client-only>
@@ -89,8 +114,9 @@ export default {
     const { data } = await $axios.get('/api/admin/tag')
     const tags = data.map.tags
     tags.forEach((t) => {
-      t.createDate = $moment
-        .tz(new Date(t.createDate), 'Asia/ShangHai')
+      const d = $moment(new Date(t.createDate), 'Asia/ShangHai').utc()
+      t.createDate = $moment(d)
+        .local()
         .format('YYYY/MM/DD')
     })
     return { tags: data.map.tags }
@@ -101,8 +127,8 @@ export default {
         { text: '标签名称', value: 'title', sortable: false, align: 'start' },
         { text: '创建日期', value: 'createDate' },
         { text: '点击次数', value: 'viewTimes' },
-        { text: '文章数量', value: 'articleNums' },
-        { text: '修改名称', value: 'actions', sortable: false }
+        { text: '文章数量', value: 'articleNums' }
+        // { text: '修改名称', value: 'actions', sortable: false }
       ],
       editedItem: {},
       newTag: {},
@@ -120,32 +146,46 @@ export default {
     close() {
       this.dialog = false
     },
-    save() {
-      if (this.newTag.title.trim() === '') {
+    deleteTag() {
+      this.$axios.delete('/api/admin/tag').then((res) => {
         this.$notifier.showMessage({
-          content: '标签名称不能为空',
-          color: 'error'
+          content: `共删除${res.data.map.rows}条数据`,
+          color: 'info'
         })
-        return
-      }
-      this.newTag.createDate = null // 避免后端序列化错误，和稀泥的做法
-      this.close()
-      this.$axios({
-        url: '/api/admin/tag',
-        method: 'patch',
-        data: JSON.stringify(this.newTag),
-        headers: { 'Content-Type': 'application/json' }
-      }).then((res) => {
-        if (res.data.status === 'OK') {
-          this.$notifier.showMessage({ content: '修改成功', color: 'success' })
-          this.editedItem.title = this.newTag.title
-        }
       })
-    },
-    editItem(item) {
-      this.editedItem = item
-      this.newTag = JSON.parse(JSON.stringify(item))
-      this.dialog = true
+      this.close()
+    }
+    // save() {
+    //   if (this.newTag.title.trim() === '') {
+    //     this.$notifier.showMessage({
+    //       content: '标签名称不能为空',
+    //       color: 'error'
+    //     })
+    //     return
+    //   }
+    //   this.newTag.createDate = null // 避免后端序列化错误，和稀泥的做法
+    //   this.close()
+    //   this.$axios({
+    //     url: '/api/admin/tag',
+    //     method: 'patch',
+    //     data: JSON.stringify(this.newTag),
+    //     headers: { 'Content-Type': 'application/json' }
+    //   }).then((res) => {
+    //     if (res.data.status === 'OK') {
+    //       this.$notifier.showMessage({ content: '修改成功', color: 'success' })
+    //       this.editedItem.title = this.newTag.title
+    //     }
+    //   })
+    // },
+    // editItem(item) {
+    //   this.editedItem = item
+    //   this.newTag = JSON.parse(JSON.stringify(item))
+    //   this.dialog = true
+    // },
+  },
+  head() {
+    return {
+      title: '标签管理'
     }
   }
 }

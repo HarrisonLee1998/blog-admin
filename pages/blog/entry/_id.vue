@@ -14,6 +14,11 @@ export default {
       const { data } = await $axios.get(`/api/admin/article/entry/${id}`)
       return { article: data.map.article }
     }
+  },
+  head() {
+    return {
+      title: this.article.title
+    }
   }
 }
 </script>

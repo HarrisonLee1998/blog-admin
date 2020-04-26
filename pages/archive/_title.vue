@@ -1,7 +1,9 @@
 <template>
   <v-container>
     <v-row class="d-flex d-sm-none">
-      <v-img :src="archive.imgUrl"></v-img>
+      <v-img
+        :src="archive.imgUrl.trim() === '' ? defaultImg : archive.imgUrl.trim()"
+      ></v-img>
     </v-row>
     <v-row class="title" justify="end">
       <v-col cols="auto"> <v-icon>folder</v-icon> {{ title }} </v-col>
@@ -72,7 +74,8 @@ export default {
       prevIcons: ['mdi-chevron-left', 'mdi-arrow-left', 'mdi-menu-left'],
       page: 1,
       totalVisible: 1,
-      pageSize: 10
+      pageSize: 10,
+      defaultImg: 'https://cdn.harrisonlee.net/material.png'
     }
   },
   methods: {
@@ -84,6 +87,11 @@ export default {
         .then((res) => {
           console.log(res)
         })
+    }
+  },
+  head() {
+    return {
+      title: '归档详情: ' + this.title
     }
   }
 }

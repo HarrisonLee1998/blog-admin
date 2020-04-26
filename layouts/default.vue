@@ -71,7 +71,7 @@
         </v-list-group>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar :clipped-left="clipped" fixed app height="64px">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <!-- <v-btn icon @click.stop="miniVariant = !miniVariant">
         <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
@@ -148,10 +148,12 @@ export default {
         {
           action: 'folder',
           title: '归档',
-          items: [
-            { title: '查看归档', link: '/archive' },
-            { title: '归档管理', link: '/archive/manage' }
-          ]
+          link: '/archive',
+          items: []
+          // items: [
+          //   { title: '查看归档', link: '/archive' },
+          //   { title: '归档管理', link: '/archive/manage' }
+          // ]
         },
         {
           action: 'local_offer',

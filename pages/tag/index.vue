@@ -31,6 +31,11 @@ export default {
     //     this.isDark = state.theme.isDark
     //   }
     // })
+  },
+  head() {
+    return {
+      title: '标签词云'
+    }
   }
 }
 </script>

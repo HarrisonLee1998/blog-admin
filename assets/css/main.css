@@ -1,3 +1,6 @@
+html {
+  overflow: auto;
+}
 html, body {
   height: 100%;
 }
@@ -39,13 +42,16 @@ h6 {
   font-weight: normal;
 }
 
-.article-title{
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: inherit;
-}
-
 .v-list-item p {
   margin: 0 !important;
+}
+
+blockquote {
+  padding: 0 1em;
+  color: #6a737d;
+  border-left: .25em solid #dfe2e5;
+}
+
+.keyword {
+  color: deeppink;
 }

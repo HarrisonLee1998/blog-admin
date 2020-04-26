@@ -191,6 +191,11 @@ export default {
         this.$store.commit('archive/setArchives', res.data.map.archives)
       })
     }
+  },
+  head() {
+    return {
+      title: '写博客'
+    }
   }
 }
 </script>

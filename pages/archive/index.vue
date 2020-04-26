@@ -81,57 +81,106 @@
       </v-expansion-panels>
     </v-row>
   </v-container> -->
-  <v-row wrap justify="center">
-    <v-col
-      v-for="archive in archives"
-      :key="archive.title"
-      lg="5"
-      sm="6"
-      cols="12"
-    >
-      <v-card outlined raised>
-        <v-card-title
-          ><v-icon class="mr-2">folder</v-icon>{{ archive.title }}</v-card-title
-        >
-        <v-list-item
-          v-for="article in archive.articles"
-          :key="article.id"
-          dense
-          nuxt
-          :to="'/blog/entry/' + article.id"
-        >
-          <p class="article-title">{{ article.title }}</p>
-        </v-list-item>
-        <v-card-text v-if="archive.articles.length === 0"
-          >什么也没有~
-        </v-card-text>
-        <v-card-actions v-if="archive.articleNums > 5">
-          <v-row justify="end" class="pr-2">
-            <v-btn text depressed nuxt :to="'/archive/' + archive.title"
-              >More&gt;&gt;</v-btn
-            >
-          </v-row>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-    <!-- <div id="archive-overview">
-      共有{{ archives.length }}个归档，{{ articleTotalCount }}篇文章
-    </div>
-    <div v-for="archive in archives" :key="archive.title" class="archive">
-      <div class="archive-title">
-        <v-icon class="mr-2">folder</v-icon>{{ archive.title }}({{
-          archive.articles.length
-        }})
+  <v-container>
+    <v-row wrap justify="end" class="pr-3">
+      <v-dialog v-model="dialog" max-width="500px" dense>
+        <template v-slot:activator="{ on }">
+          <v-btn color="primary" dark v-on="on"
+            ><v-icon class="mr-2">add</v-icon>添加归档</v-btn
+          >
+        </template>
+        <v-card>
+          <v-card-title>
+            <span class="headline">添加归档</span>
+          </v-card-title>
+
+          <v-card-text>
+            <v-container>
+              <v-row justify="center">
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="newArchive.title"
+                    label="名称"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="newArchive.imgUrl"
+                    label="图片"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="newArchive.order"
+                    label="顺序"
+                    readonly
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+            <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+    <v-row wrap justify="space-between">
+      <v-col
+        v-for="archive in archives"
+        :key="archive.title"
+        lg="5"
+        sm="6"
+        cols="12"
+      >
+        <v-card outlined raised>
+          <v-card-title
+            ><v-icon class="mr-2">folder</v-icon
+            >{{ archive.title }}</v-card-title
+          >
+          <v-list-item
+            v-for="article in archive.articles"
+            :key="article.id"
+            dense
+            nuxt
+            :to="'/blog/entry/' + article.id"
+          >
+            <p class="article-title">{{ article.title }}</p>
+          </v-list-item>
+          <v-card-text v-if="archive.articles.length === 0"
+            >什么也没有~
+          </v-card-text>
+          <v-card-actions v-if="archive.articleNums > 5">
+            <v-row justify="end" class="pr-2">
+              <v-btn text depressed nuxt :to="'/archive/' + archive.title"
+                >More&gt;&gt;</v-btn
+              >
+            </v-row>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+      <!-- <div id="archive-overview">
+        共有{{ archives.length }}个归档，{{ articleTotalCount }}篇文章
       </div>
-      <ul class="archive-content">
-        <li v-for="article in archive.articles" :key="article.id">
-          <nuxt-link :to="'/article/entry/' + article.id" class="article-link">
-            {{ article.title }}
-          </nuxt-link>
-        </li>
-      </ul>
-    </div> -->
-  </v-row>
+      <div v-for="archive in archives" :key="archive.title" class="archive">
+        <div class="archive-title">
+          <v-icon class="mr-2">folder</v-icon>{{ archive.title }}({{
+            archive.articles.length
+          }})
+        </div>
+        <ul class="archive-content">
+          <li v-for="article in archive.articles" :key="article.id">
+            <nuxt-link :to="'/article/entry/' + article.id" class="article-link">
+              {{ article.title }}
+            </nuxt-link>
+          </li>
+        </ul>
+      </div> -->
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -161,14 +210,67 @@ export default {
       flat: false,
       hover: true,
       tile: false,
-      articleTotalCount: 0
+      articleTotalCount: 0,
+      dialog: false,
+      newArchive: {
+        title: '',
+        imgUrl: ''
+      }
     }
   },
   created() {
     this.archives.forEach((a) => {
       this.articleTotalCount += a.articles.length
     })
+    this.newArchive.order = this.archives.length
   },
-  methods: {}
+  methods: {
+    close() {
+      this.dialog = false
+    },
+    save() {
+      const valid = this.validate()
+      if (valid) {
+        this.$axios({
+          url: '/api/admin/archive',
+          method: 'post',
+          data: JSON.stringify(this.newArchive),
+          headers: { 'Content-Type': 'application/json' }
+        }).then((res) => {
+          if (res.data.status === 'OK') {
+            this.$notifier.showMessage({
+              content: '添加成功',
+              color: 'success'
+            })
+            this.newArchive.articleNums = 0
+            this.newArchive.articles = []
+            this.archives.push(this.newArchive)
+            this.newArchive = {}
+          }
+        })
+      }
+      this.close()
+    },
+    validate() {
+      let err = ''
+      this.newArchive.title = this.newArchive.title.trim()
+      this.newArchive.imgUrl = this.newArchive.imgUrl.trim()
+      if (this.newArchive.title === '') {
+        err = '归档名称不能为空'
+      } else if (this.newArchive.imgUrl === '') {
+        err = '归档图片不能为空'
+      }
+      if (err.trim() !== '') {
+        this.$notifier.showMessage({ content: err, color: 'error' })
+        return false
+      }
+      return true
+    }
+  },
+  head() {
+    return {
+      title: '归档'
+    }
+  }
 }
 </script>

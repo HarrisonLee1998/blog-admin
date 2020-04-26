@@ -7,3 +7,9 @@ export const mutations = {
     state.isDark = isDark
   }
 }
+
+export const getters = {
+  getTheme(state) {
+    return state.isDark
+  }
+}
