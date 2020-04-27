@@ -23,7 +23,7 @@ body {
 ::selection,
 ::-moz-selection {
   color: #fff;
-  background-color: #000;
+  background-color: deeppink;
 }
 
 pre, code {

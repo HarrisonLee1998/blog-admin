@@ -117,6 +117,9 @@
       <v-switch v-model="isDark" label="Toggle dark them"></v-switch>
     </v-container> -->
     <Snackbar></Snackbar>
+    <v-icon v-show="scrolled" id="back-to-up" @click="backToUp"
+      >arrow_upward</v-icon
+    >
   </v-app>
 </template>
 
@@ -184,7 +187,8 @@ export default {
       rightDrawer: false,
       title: 'blog-admin',
       isDark: false,
-      timer: ''
+      timer: '',
+      scrolled: false
     }
   },
   watch: {
@@ -206,8 +210,34 @@ export default {
       this.$vuetify.theme.dark = false
       this.isDark = false
     }
+    this.initEvent()
   },
   beforeDestroy() {},
-  methods: {}
+  methods: {
+    backToUp() {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    },
+    initEvent() {
+      window.addEventListener('scroll', () => {
+        const height =
+          document.body.scrollTop || document.documentElement.scrollTop
+        if (height > 0) {
+          this.scrolled = true
+        } else {
+          this.scrolled = false
+        }
+      })
+    }
+  }
 }
 </script>
+
+<style lang="scss" scoped>
+#back-to-up {
+  position: fixed;
+  bottom: 20px;
+  right: 0.5%;
+  cursor: pointer;
+  z-index: 999;
+}
+</style>

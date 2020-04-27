@@ -47,7 +47,7 @@
         :toolbars="markdownOption"
         :external-link="externalLink"
         :box-shadow="false"
-        style="height: 580px;"
+        style="height: 500px;"
         :toolbars-background="isDark ? '#000' : '#fff'"
         :editor-background="isDark ? '#000' : '#fff'"
         :preview-background="isDark ? '#000' : '#fff'"
@@ -214,6 +214,11 @@ export default {
       isDark: false
     }
   },
+  watch: {
+    doc(newVal) {
+      this.markdown = newVal
+    }
+  },
   beforeMount() {
     this.getQiniuUploadInfoFromStore()
     this.isDark = this.$store.getters['theme/getTheme']
@@ -331,8 +336,8 @@ export default {
   background-color: inherit !important;
   color: inherit !important;
 }
-
-.content-input-wrapper {
-  height: 100%;
-}
+/*加了过后，滚动条不正常*/
+/* .content-input-wrapper {
+  height: 100% !important;
+} */
 </style>

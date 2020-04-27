@@ -1,20 +1,42 @@
 /* 滚动条配置 */
 /* width */
-::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 5px;
+  height: 5px;
 }
 
 /* Track */
-::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   background: #f5f6fa;
 }
 
 /* Handle */
-::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   background: #9d9d9e;
 }
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
+*::-webkit-scrollbar-thumb:hover {
   background: #9d9d9e;
+}
+
+/*
+  针对火狐的修改
+  其中 .v-note-edit, .v-show-content 这两个是针对mavon-editor的
+  但是在chrome中，editor生效了，hljs没生效
+  html, .hljs, .v-note-edit, .v-show-content
+*/
+* {
+  scrollbar-width: thin;
+  /*这里例子中，黄色是前景色，蓝色是底色*/
+  /* scrollbar-color: yellow blue; */
+  scrollbar-color: #9d9d9e #f5f6fa ;
+}
+
+/* .hljs::-webkit-scrollbar {
+  height: 5px;
+} */
+
+html, body {
+  -ms-overflow-style: none;
 }
