@@ -20,7 +20,7 @@
       </v-card-text>
       <v-row justify="end">
         <v-card-actions>
-          <v-btn
+          <!-- <v-btn
             outlined
             fab
             small
@@ -31,7 +31,8 @@
           >
           <v-btn outlined fab small color="red" title="加入回收站" class="mx-4"
             ><v-icon>delete</v-icon></v-btn
-          >
+          > -->
+          <v-btn text @click="handleAction">action</v-btn>
         </v-card-actions>
       </v-row>
     </v-card>
