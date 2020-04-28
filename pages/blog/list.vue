@@ -183,15 +183,26 @@ export default {
   },
   watch: {
     pageNo() {
-      if (this.mode === 0) {
-        this.getArticles()
-      } else {
-        this.searchArticles()
-      }
+      this.handleMode()
     }
   },
+  created() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'blog/setIsDelete') {
+        /**
+         * 这里需要注意判断，如果是加入了回收站，那么刷新当前页面的列表
+         */
+        if (state.blog.isDelete === true) {
+          if (this.pageUtil.list.length === 1) {
+            this.pageNo--
+          }
+          this.handleMode()
+        }
+      }
+    })
+  },
   beforeMount() {
-    this.getArticles()
+    this.handleMode()
   },
   methods: {
     getArticles() {
@@ -258,6 +269,16 @@ export default {
           content: err,
           color: 'error'
         })
+      } else {
+        this.searchArticles()
+      }
+    },
+    handleMode() {
+      if (this.pageNo < 1) {
+        this.pageNo = 1
+      }
+      if (this.mode === 0) {
+        this.getArticles()
       } else {
         this.searchArticles()
       }

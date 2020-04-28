@@ -85,8 +85,8 @@
       <v-toolbar-title v-text="title" />
       <v-spacer />
       <v-btn icon @click.stop="isDark = !isDark">
-        <v-icon v-show="!isDark">mdi-brightness-7</v-icon>
-        <v-icon v-show="isDark">mdi-brightness-2</v-icon>
+        <v-icon v-show="!isDark">wb_sunny</v-icon>
+        <v-icon v-show="isDark">nights_stay</v-icon>
       </v-btn>
     </v-app-bar>
     <!-- 路由切换区 -->
@@ -144,7 +144,7 @@ export default {
           title: '博客',
           items: [
             { title: '写博客', link: '/blog/write' },
-            { title: '查看博客', link: '/blog/list' },
+            { title: '查看博客', link: '/blog' },
             { title: '回收站', link: '/blog/recycle' }
           ]
         },

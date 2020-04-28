@@ -108,11 +108,23 @@ export default {
   data() {
     return {
       drawer: false,
-      titles: []
+      titles: [],
+      unsubscribe: null
     }
   },
   mounted() {
     this.handleTitle()
+  },
+  created() {
+    this.unsubscribe = this.$store.subscribe((mutation, state) => {
+      const type = mutation.type
+      if (type === 'blog/setDeleted') {
+        this.$router.push('/blog/recycle')
+      }
+    })
+  },
+  beforeDestroy() {
+    this.unsubscribe()
   },
   methods: {
     handleTitle() {

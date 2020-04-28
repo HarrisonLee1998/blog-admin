@@ -1,5 +1,5 @@
 <template>
-  <BlogList :normal="false" />
+  <BlogList />
 </template>
 
 <script>
@@ -10,7 +10,7 @@ export default {
   },
   head() {
     return {
-      title: '博客回收站'
+      title: '博客列表'
     }
   }
 }

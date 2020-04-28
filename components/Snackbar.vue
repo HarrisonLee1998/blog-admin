@@ -25,6 +25,7 @@ export default {
         this.message = state.snackbar.content
         this.color = state.snackbar.color
         this.show = true
+        this.timeout = state.snackbar.time ? state.snackbar.time : 4000
       }
     })
   }
