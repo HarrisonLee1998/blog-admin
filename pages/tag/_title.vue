@@ -21,15 +21,19 @@
         v-text="$moment(article.lastUpdateDate).format('YYYY/MM/DD')"
       ></v-col>
     </v-row>
+    <v-row v-if="pageInfo.total === 0" class="ma-4" justify="center">
+      该标签下还没有文章~
+    </v-row>
     <v-row>
       <v-pagination
+        v-if="pageInfo.pages > 1"
         v-model="page"
         :circle="circle"
         :disabled="disabled"
-        :length="length"
+        :length="pageInfo.pages"
         :next-icon="nextIcon"
         :prev-icon="prevIcon"
-        :page="page"
+        :page="pageNo"
         :total-visible="totalVisible"
       ></v-pagination>
     </v-row>
@@ -44,8 +48,8 @@ export default {
       redirect('/404')
     } else {
       // 分页大小为10条数据
-      const { data } = await $axios.get(`/api/admin/article/tag/${title}/1/10`)
-      return { pageInfo: data.map.pageInfo, title }
+      await $axios.get(`/api/admin/tag/test/${encodeURI(title)}`)
+      return { title }
     }
   },
   data() {
@@ -57,19 +61,35 @@ export default {
       nextIcons: ['mdi-chevron-right', 'mdi-arrow-right', 'mdi-menu-right'],
       prevIcon: 'navigate_before',
       prevIcons: ['mdi-chevron-left', 'mdi-arrow-left', 'mdi-menu-left'],
-      page: 1,
+      pageNo: 1,
       totalVisible: 1,
-      pageSize: 10
+      pageSize: 10,
+      pageInfo: {
+        total: 1,
+        pages: 0
+      }
     }
+  },
+  watch: {
+    pageNo() {
+      this.getArticle()
+    }
+  },
+  beforeMount() {
+    this.getArticle()
   },
   methods: {
     getArticle() {
       this.$axios
         .get(
-          `/api/admin/article/tag/${this.title}/${this.page}/${this.pageSize}`
+          `/api/admin/article/tag/${encodeURI(this.title)}/${this.pageNo}/${
+            this.pageSize
+          }`
         )
         .then((res) => {
-          console.log(res)
+          if (res.data.status === 'OK') {
+            this.pageInfo = res.data.map.pageInfo
+          }
         })
     }
   },

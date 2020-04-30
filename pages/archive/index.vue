@@ -128,63 +128,22 @@
         </v-card>
       </v-dialog>
     </v-row>
-    <v-row wrap justify="space-between">
-      <v-col
+    <v-row justify="space-between">
+      <ArchiveCard
         v-for="archive in archives"
         :key="archive.title"
-        lg="5"
-        sm="6"
-        cols="12"
-      >
-        <v-card outlined raised>
-          <v-card-title
-            ><v-icon class="mr-2">folder</v-icon
-            >{{ archive.title }}</v-card-title
-          >
-          <v-list-item
-            v-for="article in archive.articles"
-            :key="article.id"
-            dense
-            nuxt
-            :to="'/blog/entry/' + article.id"
-          >
-            <p class="article-title">{{ article.title }}</p>
-          </v-list-item>
-          <v-card-text v-if="archive.articles.length === 0"
-            >什么也没有~
-          </v-card-text>
-          <v-card-actions v-if="archive.articleNums > 5">
-            <v-row justify="end" class="pr-2">
-              <v-btn text depressed nuxt :to="'/archive/' + archive.title"
-                >More&gt;&gt;</v-btn
-              >
-            </v-row>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-      <!-- <div id="archive-overview">
-        共有{{ archives.length }}个归档，{{ articleTotalCount }}篇文章
-      </div>
-      <div v-for="archive in archives" :key="archive.title" class="archive">
-        <div class="archive-title">
-          <v-icon class="mr-2">folder</v-icon>{{ archive.title }}({{
-            archive.articles.length
-          }})
-        </div>
-        <ul class="archive-content">
-          <li v-for="article in archive.articles" :key="article.id">
-            <nuxt-link :to="'/article/entry/' + article.id" class="article-link">
-              {{ article.title }}
-            </nuxt-link>
-          </li>
-        </ul>
-      </div> -->
+        :archive="archive"
+      />
     </v-row>
   </v-container>
 </template>
 
 <script>
+import ArchiveCard from '~/components/ArchiveCard'
 export default {
+  components: {
+    ArchiveCard
+  },
   async asyncData({ $axios }) {
     const { data } = await $axios.get('/api/admin/archive')
     let archives = data.map.archives

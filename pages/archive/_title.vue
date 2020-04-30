@@ -1,10 +1,5 @@
 <template>
   <v-container>
-    <v-row class="d-flex d-sm-none">
-      <v-img
-        :src="archive.imgUrl.trim() === '' ? defaultImg : archive.imgUrl.trim()"
-      ></v-img>
-    </v-row>
     <v-row class="title" justify="end">
       <v-col cols="auto"> <v-icon>folder</v-icon> {{ title }} </v-col>
     </v-row>
@@ -26,15 +21,19 @@
         v-text="$moment(article.lastUpdateDate).format('YYYY/MM/DD')"
       ></v-col>
     </v-row>
+    <v-row v-if="pageInfo.total === 0" class="ma-4" justify="center">
+      该归档下还没有文章~
+    </v-row>
     <v-row>
       <v-pagination
-        v-model="page"
+        v-if="pageInfo.pages > 1"
+        v-model="pageNo"
         :circle="circle"
         :disabled="disabled"
-        :length="length"
+        :length="pageInfo.pages"
         :next-icon="nextIcon"
         :prev-icon="prevIcon"
-        :page="page"
+        :page="pageNo"
         :total-visible="totalVisible"
       ></v-pagination>
     </v-row>
@@ -43,24 +42,17 @@
 
 <script>
 export default {
+  /**
+   * asyncData 检查该归档名称是否存在
+   */
   async asyncData({ $axios, route, redirect }) {
     const title = route.params.title.trim()
     if (title === '') {
       redirect('/404')
     } else {
-      // 分页大小为10条数据
-      // const { data } = await $axios.get(
-      //   encodeURI(`/api/admin/article/archive/${title}/1/10`)
-      // )
-      const [res1, res2] = await Promise.all([
-        $axios.get(encodeURI(`/api/admin/article/archive/${title}/1/10`)),
-        $axios.get(encodeURI(`/api/admin/archive/${title}`))
-      ])
-      return {
-        pageInfo: res1.data.map.pageInfo,
-        archive: res2.data.map.archive,
-        title
-      }
+      // 如果不存在，会返回NOT-FOUND，从而会自动跳转到404
+      await $axios.get(encodeURI(`/api/admin/archive/${title}`))
+      return { title }
     }
   },
   data() {
@@ -72,20 +64,35 @@ export default {
       nextIcons: ['mdi-chevron-right', 'mdi-arrow-right', 'mdi-menu-right'],
       prevIcon: 'navigate_before',
       prevIcons: ['mdi-chevron-left', 'mdi-arrow-left', 'mdi-menu-left'],
-      page: 1,
-      totalVisible: 1,
-      pageSize: 10,
-      defaultImg: 'https://cdn.harrisonlee.net/material.png'
+      pageNo: 1,
+      totalVisible: 5,
+      pageSize: 4,
+      pageInfo: {
+        total: 1,
+        pages: 0
+      }
     }
+  },
+  watch: {
+    pageNo() {
+      this.getArticle()
+    }
+  },
+  beforeMount() {
+    this.getArticle()
   },
   methods: {
     getArticle() {
       this.$axios
         .get(
-          `/api/admin/article/archive/${this.title}/${this.page}/${this.pageSize}`
+          `/api/admin/article/archive/${encodeURI(this.title)}/${this.pageNo}/${
+            this.pageSize
+          }`
         )
         .then((res) => {
-          console.log(res)
+          if (res.data.status === 'OK') {
+            this.pageInfo = res.data.map.pageInfo
+          }
         })
     }
   },

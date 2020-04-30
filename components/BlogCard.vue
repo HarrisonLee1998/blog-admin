@@ -12,11 +12,13 @@
         <!--文章信息-->
         <BlogInfo :article="article"></BlogInfo>
         <p
+          v-if="article.pure_txt.trim() !== ''"
           class="article-content"
-          v-html="
-            article.pure_txt ? article.pure_txt : parseContent(article.html)
-          "
+          v-html="article.pure_txt"
         ></p>
+        <p v-if="article.pure_txt.trim() === ''" class="empty-content">
+          没有预览内容，请点击标题浏览详情
+        </p>
         <!--article.pure_txt ? article.pure_txt : parseContent(article.html)-->
       </v-card-text>
       <!-- <v-row justify="end">
@@ -83,5 +85,9 @@ export default {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 5;
+}
+.empty-content {
+  font-style: italic;
+  font-size: 12px;
 }
 </style>
