@@ -93,9 +93,7 @@
     <v-content>
       <v-container>
         <v-row align="center" justify="center">
-          <v-col cols="12">
-            <nuxt />
-          </v-col>
+          <nuxt />
         </v-row>
       </v-container>
     </v-content>
@@ -168,19 +166,19 @@ export default {
         },
         {
           action: 'people',
-          title: '友链管理',
-          link: '/friend',
+          title: '关于',
+          link: '/about',
           items: []
-        },
-        {
-          action: 'settings',
-          title: '系统设置',
-          items: [
-            { title: '基本设置', no: '5-1' },
-            { title: '前台设置', no: '5-1' },
-            { title: '后台设置', no: '5-1' }
-          ]
         }
+        // {
+        //   action: 'settings',
+        //   title: '系统设置',
+        //   items: [
+        //     { title: '基本设置', no: '5-1' },
+        //     { title: '前台设置', no: '5-1' },
+        //     { title: '后台设置', no: '5-1' }
+        //   ]
+        // }
       ],
       miniVariant: false,
       right: true,
@@ -200,7 +198,7 @@ export default {
       this.$store.commit('theme/toggleTheme', this.isDark)
     }
   },
-  mounted() {
+  beforeMount() {
     const date = new Date()
     const h = date.getHours()
     if (h > 18 || h < 7) {
@@ -210,6 +208,8 @@ export default {
       this.$vuetify.theme.dark = false
       this.isDark = false
     }
+  },
+  mounted() {
     this.initEvent()
   },
   beforeDestroy() {},

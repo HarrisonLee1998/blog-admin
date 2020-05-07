@@ -85,7 +85,7 @@
     <v-row wrap justify="end" class="pr-3">
       <v-dialog v-model="dialog" max-width="500px" dense>
         <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark v-on="on"
+          <v-btn color="primary" dark class="my-4" v-on="on"
             ><v-icon class="mr-2">add</v-icon>添加归档</v-btn
           >
         </template>

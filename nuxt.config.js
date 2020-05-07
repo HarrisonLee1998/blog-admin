@@ -56,7 +56,8 @@ module.exports = {
     '@/plugins/icons',
     '@/plugins/notifier',
     '@/plugins/highlight',
-    '@/plugins/katex'
+    '@/plugins/katex',
+    '@/plugins/echarts'
   ],
   /*
    ** Nuxt.js dev-modules
@@ -76,6 +77,7 @@ module.exports = {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios'
+    // 'cookie-universal-nuxt'
   ],
   /*
    ** Axios module configuration
@@ -83,7 +85,8 @@ module.exports = {
    */
   axios: {
     proxy: true,
-    retry: false
+    retry: false,
+    credentials: true
   },
   proxy: {
     '/api': {
