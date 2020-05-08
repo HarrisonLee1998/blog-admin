@@ -29,22 +29,11 @@ export default {
           data: [],
           areaStyle: {}
         }
-      },
-      isDark: false
-    }
-  },
-  watch: {
-    isDark() {
-      this.echartsRender()
+      }
     }
   },
   mounted() {
     this.getPVTrend()
-    this.$store.subscribe((mutation, state) => {
-      if (mutation.type === 'theme/toggleTheme') {
-        this.isDark = state.theme.isDark
-      }
-    })
   },
   methods: {
     getPVTrend() {
@@ -64,10 +53,7 @@ export default {
       }
     },
     echartsRender() {
-      const uvTrend = this.$echarts.init(
-        document.getElementById('uvTrend'),
-        this.isDark ? 'dark' : 'macarons'
-      )
+      const uvTrend = this.$echarts.init(document.getElementById('uvTrend'))
       uvTrend.setOption(this.options)
     }
   }

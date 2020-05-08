@@ -28,7 +28,19 @@ module.exports = {
         rel: 'stylesheet',
         href:
           'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.0/styles/solarized-light.min.css'
+      },
+      {
+        rel: 'stylesheet',
+        href: 'https://cdn.bootcdn.net/ajax/libs/KaTeX/0.11.1/katex.min.css'
+      },
+      {
+        rel: 'stylesheet',
+        href:
+          'https://cdn.jsdelivr.net/npm/material-design-icons-iconfont@5.0.1/dist/material-design-icons.min.css'
       }
+    ],
+    script: [
+      { src: 'https://cdn.bootcdn.net/ajax/libs/KaTeX/0.11.1/katex.min.js' }
     ]
   },
   server: {
@@ -53,10 +65,10 @@ module.exports = {
    */
   plugins: [
     '@/plugins/axios',
-    '@/plugins/icons',
+    // '@/plugins/icons',
     '@/plugins/notifier',
     '@/plugins/highlight',
-    '@/plugins/katex',
+    // '@/plugins/katex',
     '@/plugins/echarts'
   ],
   /*
@@ -112,7 +124,7 @@ module.exports = {
    * 路由属性配置
    */
   router: {
-    middleware: ['auth', 'device'],
+    middleware: ['auth'], // device
     scrollBehavior(to, from, savedPosition) {
       return { x: 0, y: 0 }
     },
@@ -185,6 +197,10 @@ module.exports = {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    extend(config, ctx) {},
+    analyze: true,
+    assetFilter(assetFilename) {
+      return assetFilename.endsWith('.js')
+    }
   }
 }

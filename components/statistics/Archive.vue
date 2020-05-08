@@ -44,11 +44,6 @@ export default {
       }
     }
   },
-  watch: {
-    isDark() {
-      this.echartsRender()
-    }
-  },
   mounted() {
     this.getArchiveData()
   },
@@ -69,10 +64,7 @@ export default {
       })
     },
     echartsRender() {
-      const archive = this.$echarts.init(
-        document.getElementById('archive'),
-        this.isDark ? 'dark' : 'macarons'
-      )
+      const archive = this.$echarts.init(document.getElementById('archive'))
       archive.setOption(this.options)
     }
   }

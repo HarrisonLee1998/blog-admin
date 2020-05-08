@@ -233,7 +233,7 @@ $navbar-height: 64px;
 }
 #article-title-nav {
   width: 300px;
-  height: calc(100vh, -$navbar-height);
+  height: calc(100vh - 64px);
   overflow: auto;
   position: fixed;
   top: $navbar-height;

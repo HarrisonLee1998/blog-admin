@@ -80,21 +80,10 @@ export default {
           },
           data: []
         }
-      },
-      isDark: false
-    }
-  },
-  watch: {
-    isDark() {
-      this.echartsRender()
+      }
     }
   },
   mounted() {
-    this.$store.subscribe((mutation, state) => {
-      if (mutation.type === 'theme/toggleTheme') {
-        this.isDark = state.theme.isDark
-      }
-    })
     this.getMapData()
   },
   methods: {
@@ -118,10 +107,7 @@ export default {
       }
     },
     echartsRender() {
-      const chinaMap = this.$echarts.init(
-        document.getElementById('chinaMap'),
-        this.isDark ? 'dark' : 'macarons'
-      )
+      const chinaMap = this.$echarts.init(document.getElementById('chinaMap'))
       chinaMap.setOption(this.options)
     }
   }
