@@ -31,18 +31,6 @@ pre, code {
   overflow: auto;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-top: -64px;
-  padding-top: 64px;
-  font-size: 14px;
-  font-weight: normal;
-}
-
 .v-list-item p {
   margin: 0 !important;
 }

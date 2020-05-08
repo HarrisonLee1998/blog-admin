@@ -19,10 +19,6 @@
             <div class="subheading pink--text darken-2 title">
               Harrison Lee
             </div>
-            <!-- <div class="body-1">
-              Real peace, is not the absence of conflict; it's the absence of
-              justice.
-            </div> -->
           </v-col>
         </v-row>
       </v-img>
@@ -30,7 +26,7 @@
         <!--:prepend-icon="item.action"-->
         <v-list-group
           v-for="item in items"
-          :key="item.title"
+          :key="item.text"
           v-model="item.active"
           no-action
           :append-icon="item.items.length > 0 ? '$expand' : ''"
@@ -41,35 +37,46 @@
               <v-icon v-text="item.action"></v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title v-text="item.title"></v-list-item-title>
+              <v-list-item-title v-text="item.text"></v-list-item-title>
             </v-list-item-content>
           </template>
 
           <template v-else v-slot:activator>
-            <v-list-item nuxt link exact :to="item.link" class="px-0">
+            <v-list-item nuxt link exact :to="item.href" class="px-0">
               <v-list-item-action>
                 <v-icon v-text="item.action"></v-icon>
               </v-list-item-action>
               <v-list-item-content>
-                <v-list-item-title v-text="item.title"></v-list-item-title>
+                <v-list-item-title v-text="item.text"></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </template>
 
           <v-list-item
             v-for="subItem in item.items"
-            :key="subItem.title"
+            :key="subItem.text"
             nuxt
             link
             exact
-            :to="subItem.link"
+            :to="subItem.href"
           >
             <v-list-item-content>
-              <v-list-item-title v-text="subItem.title"></v-list-item-title>
+              <v-list-item-title v-text="subItem.text"></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-group>
       </v-list>
+      <template v-slot:append>
+        <v-row class="ma-0" justify="space-between">
+          <v-btn icon @click.stop="isDark = !isDark">
+            <v-icon v-show="!isDark">wb_sunny</v-icon>
+            <v-icon v-show="isDark">nights_stay</v-icon>
+          </v-btn>
+          <v-btn icon @click="$auth.logout()"
+            ><v-icon>exit_to_app</v-icon></v-btn
+          >
+        </v-row>
+      </template>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app height="64px">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
@@ -84,10 +91,7 @@
       </v-btn>-->
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-btn icon @click.stop="isDark = !isDark">
-        <v-icon v-show="!isDark">wb_sunny</v-icon>
-        <v-icon v-show="isDark">nights_stay</v-icon>
-      </v-btn>
+      <!-- <v-breadcrumbs :items="items"></v-breadcrumbs> -->
     </v-app-bar>
     <!-- 路由切换区 -->
     <v-content>
@@ -125,6 +129,15 @@
 import Snackbar from '~/components/Snackbar.vue'
 export default {
   components: { Snackbar },
+  // async asyncData({ $axios, store }) {
+  //   console.log('asyncData')
+  //   console.log(store)
+  //   const [backend, frontend] = await Promise.all([
+  //     $axios.get('/api/admin/config/backend'),
+  //     $axios.get('/api/admin/config/frontend')
+  //   ])
+  //   console.log(backend, frontend)
+  // },
   data() {
     return {
       clipped: false,
@@ -133,23 +146,23 @@ export default {
       items: [
         {
           action: 'dashboard',
-          title: '首页',
-          link: '/',
+          text: '首页',
+          href: '/',
           items: []
         },
         {
           action: 'edit',
-          title: '博客',
+          text: '博客',
           items: [
-            { title: '写博客', link: '/blog/write' },
-            { title: '查看博客', link: '/blog' },
-            { title: '回收站', link: '/blog/recycle' }
+            { text: '写博客', href: '/blog/write' },
+            { text: '查看博客', href: '/blog' },
+            { text: '回收站', href: '/blog/recycle' }
           ]
         },
         {
           action: 'folder',
-          title: '归档',
-          link: '/archive',
+          text: '归档',
+          href: '/archive',
           items: []
           // items: [
           //   { title: '查看归档', link: '/archive' },
@@ -158,26 +171,23 @@ export default {
         },
         {
           action: 'local_offer',
-          title: '标签',
+          text: '标签',
           items: [
-            { title: '查看标签', link: '/tag' },
-            { title: '标签管理', link: '/tag/manage' }
+            { text: '查看标签', href: '/tag' },
+            { text: '标签管理', href: '/tag/manage' }
           ]
         },
         {
           action: 'people',
-          title: '关于',
-          link: '/about',
+          text: '关于',
+          href: '/about',
           items: []
         }
         // {
         //   action: 'settings',
-        //   title: '系统设置',
-        //   items: [
-        //     { title: '基本设置', no: '5-1' },
-        //     { title: '前台设置', no: '5-1' },
-        //     { title: '后台设置', no: '5-1' }
-        //   ]
+        //   text: '系统设置',
+        //   href: '/setting',
+        //   items: []
         // }
       ],
       miniVariant: false,

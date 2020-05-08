@@ -36,23 +36,45 @@ export default {
     this.error = this.$route.params.error
   },
   methods: {
-    login() {
-      this.$axios({
-        url: '/api/admin/login',
-        method: 'POST',
-        data: {
-          username: this.username,
-          password: this.password
-        },
-        headers: { 'Content-Type': 'application/json' }
-      }).then((res) => {
+    async login() {
+      try {
+        const res = await this.$auth.loginWith('local', {
+          data: {
+            username: this.username,
+            password: this.password
+          }
+        })
         if (res.data.status === 'OK') {
-          // this.$store.commit('jwt/setToken', res.data.map.token)
+          this.$notifier.showMessage({
+            content: `login succeed ${this.$auth.user}`,
+            color: 'success'
+          })
           this.$router.push('/')
         } else {
-          this.error = '登录信息有误'
+          this.$notifier.showMessage({
+            content: 'login failed',
+            color: 'error',
+            time: 1200
+          })
         }
-      })
+      } catch (error) {}
+
+      // this.$axios({
+      //   url: '/api/admin/login',
+      //   method: 'POST',
+      //   data: {
+      //     username: this.username,
+      //     password: this.password
+      //   },
+      //   headers: { 'Content-Type': 'application/json' }
+      // }).then((res) => {
+      //   if (res.data.status === 'OK') {
+      //     // this.$store.commit('jwt/setToken', res.data.map.token)
+      //     this.$router.push('/')
+      //   } else {
+      //     this.error = '登录信息有误'
+      //   }
+      // })
     }
   }
 }

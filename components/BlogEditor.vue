@@ -15,7 +15,7 @@
       <v-btn class="ma-2" outlined color="indigo" @click="dialog = true"
         >发布文章</v-btn
       >
-      <v-btn class="ma-2">保存为草稿</v-btn>
+      <v-btn v-if="newBlog" class="ma-2" @click="saveDraft">保存为草稿</v-btn>
     </v-row>
     <v-dialog v-model="dialog" persistent max-width="400px">
       <v-card>
@@ -74,6 +74,10 @@ export default {
     blog: {
       type: Object,
       required: true
+    },
+    newBlog: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
@@ -96,8 +100,6 @@ export default {
   },
   beforeMount() {
     this.initTagStr()
-  },
-  mounted() {
     this.getArchivesFromStore()
   },
   methods: {
@@ -176,6 +178,14 @@ export default {
         s = s + '#' + e
       })
       this.tagStr = s
+    },
+    saveDraft() {
+      localStorage.setItem('draft', JSON.stringify(this.blog))
+      this.$notifier.showMessage({
+        content: '草稿保存成功',
+        color: 'info',
+        time: 1200
+      })
     }
   }
 }

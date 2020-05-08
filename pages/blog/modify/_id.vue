@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <blog-editor :blog="article" @postBlog="postBlog"></blog-editor>
+    <blog-editor
+      :blog="article"
+      :new-blog="false"
+      @postBlog="postBlog"
+    ></blog-editor>
   </v-container>
 </template>
 

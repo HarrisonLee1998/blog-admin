@@ -76,7 +76,8 @@ module.exports = {
    */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/auth'
     // 'cookie-universal-nuxt'
   ],
   /*
@@ -121,6 +122,33 @@ module.exports = {
         path: '*',
         component: resolve(__dirname, 'pages/404.vue')
       })
+    }
+  },
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: '/api/admin/login',
+            method: 'post',
+            propertyName: 'map.token'
+          },
+          logout: { url: '/api/admin/logout', method: 'post' },
+          user: {
+            url: '/api/auth/user',
+            method: 'get',
+            propertyName: 'map.user'
+          }
+        },
+        tokenRequired: true,
+        tokenType: 'bearer',
+        autoFetchUser: true
+      }
+    },
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      home: '/'
     }
   },
   /*

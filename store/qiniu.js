@@ -7,7 +7,7 @@ export const mutations = {
     state.qiniu = qiniu
   },
   removeQiniu(state) {
-    state.qiniu = null
+    state.qiniu = {}
   }
 }
 

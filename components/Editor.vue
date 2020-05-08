@@ -31,9 +31,7 @@
         ></v-select>
       </v-col>
     </v-row> -->
-    <div class="my-2">
-      <v-btn @click="dialog = !dialog">附加设置</v-btn>
-    </div>
+    <Upload class="my-2" />
     <client-only placeholder="Loading...">
       <mavonEditor
         id="mavon-editor"
@@ -53,65 +51,22 @@
         :preview-background="isDark ? '#000' : '#fff'"
         :class="isDark ? 'dark' : 'light'"
         @change="postContent"
-        @imgAdd="imgAdd"
-        @imgDel="imgDel"
       />
       <!-- :external-link="externalLink" 
             :ishijs="true"
         :code-style="codeStyle"-->
     </client-only>
-    <v-dialog v-model="dialog" persistent max-width="400px">
-      <v-card>
-        <v-card-title>
-          <span class="headline">编辑器附加设置</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-file-input
-                v-model="file"
-                label="File input"
-                show-size
-                class="my-0"
-                @change="uploadSingleFile"
-              ></v-file-input>
-            </v-row>
-            <v-row>
-              <v-text-field
-                id="file-addr-input"
-                v-model="fileAddr"
-                label="单击复制文件链接"
-                readonly
-                @mousedown="clipToBoard"
-              ></v-text-field>
-            </v-row>
-            <v-row>
-              <v-select
-                v-model="codeStyle"
-                :items="themes"
-                label="code style(切换显示有延迟)"
-              ></v-select>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialog = false"
-            >Close</v-btn
-          >
-          <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
 <script>
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+import Upload from '~/components/Upload'
 export default {
   components: {
-    mavonEditor
+    mavonEditor,
+    Upload
   },
   props: {
     doc: {
@@ -194,24 +149,8 @@ export default {
           return 'https://cdn.bootcss.com/KaTeX/' + '0.11.1' + '/katex.min.js'
         }
       },
-      themes: [
-        'solarized-light',
-        'solarized-dark',
-        'atelier-sulphurpool-dark',
-        'atelier-sulphurpool-light',
-        'tomorrow-night-blue',
-        'shades-of-purple',
-        'gradient-dark'
-      ],
-      markdown: this.doc,
-      qiniu_token: '',
-      upload_url: 'https://upload.qiniup.com',
-      cdn_url: 'https://cdn.harrisonlee.net/',
-      file: undefined,
-      fileAddr: '',
-      timer: '',
-      dialog: false,
-      isDark: false
+      isDark: false,
+      markdown: this.doc
     }
   },
   watch: {
@@ -220,7 +159,6 @@ export default {
     }
   },
   beforeMount() {
-    this.getQiniuUploadInfoFromStore()
     this.isDark = this.$store.getters['theme/getTheme']
     this.$store.subscribe((mutation, state) => {
       if (mutation.type === 'theme/toggleTheme') {
@@ -228,85 +166,9 @@ export default {
       }
     })
   },
-  beforeDestroy() {
-    clearTimeout(this.timer)
-  },
   methods: {
     postContent(markdown, html) {
       this.$emit('getContent', markdown, html)
-    },
-    getQiniuUploadInfoFromStore() {
-      // this.$store.commit('qiniu/removeQiniu')
-      const qiniu = this.$store.getters['qiniu/getQiniu']
-      if (
-        Object.keys(qiniu).length === 0 ||
-        (Object.keys(qiniu).length > 0 &&
-          // 定义超过50分钟，就重新获取token
-          new Date().getTime() - new Date(qiniu.exprireDate) > 3000)
-      ) {
-        this.getQiniuUploadInfoFromServer()
-      } else {
-        this.qiniu_token = qiniu.token
-      }
-    },
-    getQiniuUploadInfoFromServer() {
-      // this.$axios.get('/api/admin/qiniu').then((res) => {
-      //   this.qiniu_token = res.data.map.token
-      //   const qiniu = {}
-      //   qiniu.exprireDate = new Date()
-      //   qiniu.token = res.data.map.token
-      //   this.$store.commit('qiniu/setQiniu', qiniu)
-      //    请求成功后，设置定时器
-      //   this.timer = setTimeout(this.getQiniuUploadInfoFromServer, 3000)
-      // })
-      this.qiniu_token =
-        's2isdTfRNsqvGvE3ysU58S0UWCMRflkYhapdJTC2:oRwVSM1HHQOqEASHQ3DZB0P_fv8=:eyJzY29wZSI6ImhhcnJpc29uLWJsb2ciLCJkZWFkbGluZSI6MTU4NzU3NTMxOX0='
-      const qiniu = {}
-      qiniu.token = this.qiniu_token
-      qiniu.exprireDate = new Date()
-      this.$store.commit('qiniu/setQiniu', qiniu)
-      this.timer = setTimeout(this.getQiniuUploadInfoFromServer, 3000)
-    },
-    imgAdd(pos, file) {},
-    imgDel(filename) {},
-    clipToBoard() {
-      if (this.fileAddr.trim() === '') {
-        return
-      }
-      const input = document.querySelector('#file-addr-input')
-      input.select()
-      if (document.execCommand('copy')) {
-        document.execCommand('copy')
-        this.$notifier.showMessage({
-          content: '内容已复制到粘贴板',
-          color: 'info'
-        })
-      } else {
-        this.$notifier.showMessage({ content: '内容复制失败', color: 'error' })
-      }
-    },
-    // 利用axios上传文件
-    uploadSingleFile(file) {
-      if (file === undefined) {
-        return
-      }
-      const formdata = new FormData()
-      formdata.append('file', file)
-      formdata.append('token', this.qiniu_token)
-      formdata.append('key', file.name)
-      this.$axios({
-        url: this.upload_url,
-        method: 'post',
-        data: formdata,
-        headers: { 'Content-Type': 'multipart/form-data' }
-      }).then((response) => {
-        this.$notifier.showMessage({
-          content: '文件上传成功',
-          color: 'success'
-        })
-        this.fileAddr = this.cdn_url + response.data.key
-        this.file = undefined
-      })
     }
   }
 }

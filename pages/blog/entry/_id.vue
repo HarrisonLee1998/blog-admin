@@ -45,7 +45,7 @@
         </div> -->
         <BlogInfo :article="article"></BlogInfo>
         <v-divider></v-divider>
-        <div id="content" class="mt-4" v-html="article.html"></div>
+        <div id="content" v-html="article.html"></div>
       </v-col>
     </v-row>
     <!--标题导航开始-->
@@ -182,5 +182,35 @@ $navbar-height: 64px;
 }
 .title-nav-hidden {
   right: -100%;
+}
+</style>
+
+<style>
+#content {
+  margin-top: 64px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  position: relative;
+  margin-top: -64px;
+  padding-top: 64px;
+}
+h1 {
+  font-size: 18px;
+}
+h2 {
+  font-size: 16px;
+}
+h3 {
+  font-size: 14px;
+}
+h4,
+h5,
+h6 {
+  font-size: 12px;
 }
 </style>

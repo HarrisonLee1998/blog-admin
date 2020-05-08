@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <blog-editor :blog="blog" @postBlog="postBlog"></blog-editor>
+    <blog-editor
+      :blog="blog"
+      :new-blog="true"
+      @postBlog="postBlog"
+    ></blog-editor>
     <v-dialog v-model="dialog" max-width="290">
       <v-card>
         <v-card-title class="headline">文章发布成功</v-card-title>
@@ -12,6 +16,23 @@
 
           <v-btn color="green darken-1" text @click="viewDetails">
             查看详情
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialog2" max-width="290">
+      <v-card>
+        <v-card-title class="headline">还有一篇草稿未处理</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="darken-1" text @click="dialog2 = false">
+            忽略
+          </v-btn>
+          <v-btn color="darken-1" text @click="clearDraft">
+            清空
+          </v-btn>
+          <v-btn color="darken-1" text @click="handleDraft">
+            处理
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -39,11 +60,22 @@ export default {
       },
       emptyBlog: {},
       dialog: false,
-      url: '/'
+      url: '/',
+      dialog2: false,
+      draft: null
     }
   },
   beforeMount() {
     this.emptyBlog = JSON.parse(JSON.stringify(this.blog))
+    const draft = localStorage.getItem('draft')
+    if (draft) {
+      this.draft = JSON.parse(draft)
+    }
+  },
+  mounted() {
+    if (this.draft) {
+      this.dialog2 = true
+    }
   },
   methods: {
     postBlog(blog) {
@@ -67,6 +99,14 @@ export default {
     viewDetails() {
       this.dialog = false
       this.$router.push(this.url)
+    },
+    handleDraft() {
+      this.blog = this.draft
+      this.dialog2 = false
+    },
+    clearDraft() {
+      localStorage.removeItem('draft')
+      this.dialog2 = false
     }
   },
   head() {
