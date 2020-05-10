@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="ma-0 pa-0">
     <v-tabs class="elevation-2">
       <v-tabs-slider></v-tabs-slider>
 
@@ -8,7 +8,7 @@
       </v-tab>
       <v-tab-item>
         <v-card flat tile>
-          <v-card-text>
+          <v-card-text class="pa-2">
             <ChinaMap />
           </v-card-text>
         </v-card>
@@ -19,7 +19,7 @@
       </v-tab>
       <v-tab-item>
         <v-card flat tile>
-          <v-card-text>
+          <v-card-text class="pa-2">
             <WorldMap />
           </v-card-text>
         </v-card>

@@ -136,6 +136,7 @@ export default {
       }
       this.$axios.get(url).then((res) => {
         this.pageUtil = res.data.map.pageUtil
+        this.handleDate()
         window.scrollTo({ top: 0, behavior: 'smooth' })
       })
     },
@@ -207,6 +208,29 @@ export default {
       } else {
         this.searchArticles()
       }
+    },
+    handleDate() {
+      const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      }
+      this.pageUtil.list.forEach((article) => {
+        article.post_date = new Intl.DateTimeFormat('zh-CN', options).format(
+          new Date(article.post_date)
+        )
+        article.last_update_date = new Intl.DateTimeFormat(
+          'zh-CN',
+          options
+        ).format(new Date(article.last_update_date))
+        if (article.post_date !== article.last_update_date) {
+          article.edited = true
+        }
+      })
     }
   }
 }

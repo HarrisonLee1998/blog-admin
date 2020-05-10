@@ -15,7 +15,9 @@
       </v-col>
     </v-row>
     <v-row v-show="mode === 1" justify="end">
-      <v-btn class="mr-4"><v-icon class="pr-2">clear</v-icon>Cancel</v-btn>
+      <v-btn class="mr-4" @click="mode = 0"
+        ><v-icon class="pr-2">clear</v-icon>Cancel</v-btn
+      >
       <v-btn @click="postContent"><v-icon class="pr-2">save</v-icon>Save</v-btn>
     </v-row>
     <v-row justify="center">

@@ -146,14 +146,7 @@ export default {
   },
   async asyncData({ $axios }) {
     const { data } = await $axios.get('/api/admin/archive')
-    let archives = data.map.archives
-    archives = archives.sort((x, y) => y.articles.length - x.articles.length)
-    archives.forEach((a) => {
-      a.articleNums = a.articles.length
-      if (a.articleNums > 5) {
-        a.articles = a.articles.slice(0, 5)
-      }
-    })
+    const archives = data.map.archives
     return { archives }
   },
   data() {
@@ -178,9 +171,6 @@ export default {
     }
   },
   created() {
-    this.archives.forEach((a) => {
-      this.articleTotalCount += a.articles.length
-    })
     this.newArchive.order = this.archives.length
   },
   methods: {
@@ -219,6 +209,11 @@ export default {
       } else if (this.newArchive.imgUrl === '') {
         err = '归档图片不能为空'
       }
+      this.archives.forEach((archive) => {
+        if (archive.title === this.newArchive.title) {
+          err = `归档${archive.title}已存在`
+        }
+      })
       if (err.trim() !== '') {
         this.$notifier.showMessage({ content: err, color: 'error' })
         return false
@@ -228,7 +223,7 @@ export default {
   },
   head() {
     return {
-      title: '归档'
+      title: '归档列表'
     }
   }
 }

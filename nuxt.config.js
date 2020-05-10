@@ -6,8 +6,9 @@ module.exports = {
    ** Headers of the page
    */
   head: {
-    titleTemplate: '%s - ' + process.env.npm_package_name,
-    title: process.env.npm_package_name || '',
+    // titleTemplate: '%s - ' + process.env.npm_package_name,
+    titleTemplate: '%s - ' + 'blog-admin',
+    // title: process.env.npm_package_name || '',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -19,11 +20,11 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      {
-        rel: 'stylesheet',
-        href:
-          'https://cdn.bootcss.com/github-markdown-css/4.0.0/github-markdown.min.css'
-      },
+      // {
+      //   rel: 'stylesheet',
+      //   href:
+      //     'https://cdn.bootcss.com/github-markdown-css/4.0.0/github-markdown.min.css'
+      // },
       {
         rel: 'stylesheet',
         href:
@@ -56,7 +57,7 @@ module.exports = {
    */
   css: [
     '@/assets/css/main.css',
-    '@/assets/css/animate.css',
+    // '@/assets/css/animate.css',
     '@/assets/css/scrollbar.css',
     '@/assets/css/route.css'
   ],
@@ -67,9 +68,9 @@ module.exports = {
     '@/plugins/axios',
     // '@/plugins/icons',
     '@/plugins/notifier',
-    '@/plugins/highlight',
+    '@/plugins/highlight'
     // '@/plugins/katex',
-    '@/plugins/echarts'
+    // '@/plugins/echarts'
   ],
   /*
    ** Nuxt.js dev-modules
@@ -77,11 +78,11 @@ module.exports = {
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
-    '@nuxtjs/vuetify',
-    '@nuxtjs/moment'
+    '@nuxtjs/vuetify'
+    // '@nuxtjs/moment'
   ],
   moment: {
-    defaultTimezone: 'America/Los_Angeles'
+    defaultTimezone: 'Asia/Shanghai'
   },
   /*
    ** Nuxt.js modules
@@ -103,7 +104,7 @@ module.exports = {
   },
   proxy: {
     '/api': {
-      target: 'http://127.0.0.1:8080/',
+      target: 'http://127.0.0.1:8080/blog',
       pathRewrite: {
         '^/api': '/'
       }
@@ -125,9 +126,6 @@ module.exports = {
    */
   router: {
     middleware: ['auth'], // device
-    scrollBehavior(to, from, savedPosition) {
-      return { x: 0, y: 0 }
-    },
     extendRoutes(routes, resolve) {
       routes.push({
         name: 'custom',
@@ -197,10 +195,31 @@ module.exports = {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {},
-    analyze: true,
-    assetFilter(assetFilename) {
-      return assetFilename.endsWith('.js')
-    }
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+        automaticNameDelimiter: '.',
+        maxAsyncRequests: 7,
+        cacheGroups: {
+          vuetify: {
+            test: /node_modules[\\/]vuetify/,
+            chunks: 'all',
+            priority: 20,
+            name: true
+          },
+          echarts: {
+            test: /node_modules[\\/]echarts/,
+            chunks: 'all',
+            priority: 20,
+            name: true
+          }
+        }
+      }
+    },
+    extend(config, ctx) {}
+    // analyze: true
+    // assetFilter(assetFilename) {
+    //   return assetFilename.endsWith('.js')
+    // }
   }
 }

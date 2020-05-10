@@ -34,7 +34,7 @@ export default {
   },
   head() {
     return {
-      title: '标签词云'
+      title: '标签列表'
     }
   }
 }

@@ -110,16 +110,15 @@
 
 <script>
 export default {
-  async asyncData({ $axios, $moment }) {
+  async asyncData({ $axios }) {
     const { data } = await $axios.get('/api/admin/tag')
     const tags = data.map.tags
     tags.forEach((t) => {
-      const d = $moment(new Date(t.createDate), 'Asia/ShangHai').utc()
-      t.createDate = $moment(d)
-        .local()
-        .format('YYYY/MM/DD')
+      const d = t.createDate
+      const s = d[0] + '/' + d[1] + '/' + d[2]
+      t.createDate = s
     })
-    return { tags: data.map.tags }
+    return { tags }
   },
   data() {
     return {
@@ -155,33 +154,6 @@ export default {
       })
       this.close()
     }
-    // save() {
-    //   if (this.newTag.title.trim() === '') {
-    //     this.$notifier.showMessage({
-    //       content: '标签名称不能为空',
-    //       color: 'error'
-    //     })
-    //     return
-    //   }
-    //   this.newTag.createDate = null // 避免后端序列化错误，和稀泥的做法
-    //   this.close()
-    //   this.$axios({
-    //     url: '/api/admin/tag',
-    //     method: 'patch',
-    //     data: JSON.stringify(this.newTag),
-    //     headers: { 'Content-Type': 'application/json' }
-    //   }).then((res) => {
-    //     if (res.data.status === 'OK') {
-    //       this.$notifier.showMessage({ content: '修改成功', color: 'success' })
-    //       this.editedItem.title = this.newTag.title
-    //     }
-    //   })
-    // },
-    // editItem(item) {
-    //   this.editedItem = item
-    //   this.newTag = JSON.parse(JSON.stringify(item))
-    //   this.dialog = true
-    // },
   },
   head() {
     return {

@@ -59,7 +59,11 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <div id="test" style="box-shadown:none;" v-html="blog.html"></div>
+    <v-row justify="center">
+      <v-col cols="12" lg="8" xl="6">
+        <div id="test" style="box-shadown:none;" v-html="blog.html"></div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -165,7 +169,7 @@ export default {
       }
     },
     getArchivesFromServer() {
-      this.$axios.get('/api/admin/archive').then((res) => {
+      this.$axios.get('/api/admin/archive/title').then((res) => {
         res.data.map.archives.forEach((a) => {
           this.archives.push(a.title)
         })

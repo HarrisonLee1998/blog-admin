@@ -17,8 +17,7 @@
       <v-col
         cols="auto"
         class="d-none d-lg-flex d-xl-flex"
-        :title="$moment(article.lastUpdateDate).format('YYYY/MM/DD HH:mm:ss')"
-        v-text="$moment(article.lastUpdateDate).format('YYYY/MM/DD')"
+        v-text="article.lastUpdateDate"
       ></v-col>
     </v-row>
     <v-row v-if="pageInfo.total === 0" class="ma-4" justify="center">
@@ -92,8 +91,26 @@ export default {
         .then((res) => {
           if (res.data.status === 'OK') {
             this.pageInfo = res.data.map.pageInfo
+            this.handleDate()
           }
         })
+    },
+    handleDate() {
+      const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      }
+      this.pageInfo.list.forEach((article) => {
+        article.lastUpdateDate = new Intl.DateTimeFormat(
+          'zh-CN',
+          options
+        ).format(new Date(article.lastUpdateDate))
+      })
     }
   },
   head() {

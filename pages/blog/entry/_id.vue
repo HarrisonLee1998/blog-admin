@@ -89,14 +89,22 @@ export default {
     } else {
       const { data } = await $axios.get(`/api/admin/article/entry/${id}`)
       const article = data.map.article
-      let d = $moment(new Date(article.post_date), 'Asia/ShangHai').utc()
-      article.post_date = $moment(d)
-        .local()
-        .format('YYYY/MM/DD HH:mm:ss')
-      d = $moment(new Date(article.last_update_date), 'Asia/ShangHai').utc()
-      article.last_update_date = $moment(d)
-        .local()
-        .format('YYYY/MM/DD HH:mm:ss')
+      const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      }
+      article.post_date = new Intl.DateTimeFormat('zh-CN', options).format(
+        new Date(article.post_date)
+      )
+      article.last_update_date = new Intl.DateTimeFormat(
+        'zh-CN',
+        options
+      ).format(new Date(article.last_update_date))
       if (article.post_date === article.last_update_date) {
         article.edited = false
       } else {

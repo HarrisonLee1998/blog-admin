@@ -1,19 +1,16 @@
 <template>
-  <v-container fluid class="mt-1">
-    <v-row justify="center">
-      <div id="archive"></div>
-    </v-row>
-  </v-container>
+  <div id="archive"></div>
 </template>
 
 <script>
+import echarts from 'echarts/lib/echarts'
 export default {
   data() {
     return {
       options: {
         title: {
           text: '各归档文章数量',
-          left: 'center'
+          left: 'left'
         },
         tooltip: {
           trigger: 'item',
@@ -49,7 +46,7 @@ export default {
   },
   methods: {
     getArchiveData() {
-      this.$axios.get('/api/admin/archive/article/count').then((res) => {
+      this.$axios.get('/api/admin/archive').then((res) => {
         if (res.data.status === 'OK') {
           this.parseData(res.data.map.archives)
           this.echartsRender()
@@ -58,13 +55,15 @@ export default {
     },
     parseData(archives) {
       archives.forEach((archive) => {
-        const arc = { name: archive.title, value: archive.articleNums }
-        this.options.series.data.push(arc)
-        this.options.legend.data.push(archive.title)
+        if (archive.articleNums > 0) {
+          const arc = { name: archive.title, value: archive.articleNums }
+          this.options.series.data.push(arc)
+          this.options.legend.data.push(archive.title)
+        }
       })
     },
     echartsRender() {
-      const archive = this.$echarts.init(document.getElementById('archive'))
+      const archive = echarts.init(document.getElementById('archive'))
       archive.setOption(this.options)
     }
   }
@@ -73,7 +72,7 @@ export default {
 
 <style scoped>
 #archive {
-  width: 580px;
+  width: 100%;
   height: 400px;
 }
 </style>

@@ -1,12 +1,9 @@
 <template>
-  <v-container fluid class="mt-1">
-    <v-row justify="center">
-      <div id="uvTrend"></div>
-    </v-row>
-  </v-container>
+  <div id="uvTrend"></div>
 </template>
 
 <script>
+import echarts from 'echarts/lib/echarts'
 export default {
   data() {
     return {
@@ -53,7 +50,7 @@ export default {
       }
     },
     echartsRender() {
-      const uvTrend = this.$echarts.init(document.getElementById('uvTrend'))
+      const uvTrend = echarts.init(document.getElementById('uvTrend'))
       uvTrend.setOption(this.options)
     }
   }
@@ -62,8 +59,7 @@ export default {
 
 <style scoped>
 #uvTrend {
-  width: 480px;
+  width: 100%;
   height: 270px;
-  overflow: hidden;
 }
 </style>

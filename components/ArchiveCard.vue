@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="ma-1">
     <!--图片-->
     <nuxt-link class="archive-card" :to="'/archive/' + archive.title">
       <img :src="archive.imgUrl === '' ? defaultUrl : archive.imgUrl" />
       <div class="archive-title">
-        {{ archive.title }}
+        {{ archive.title }} ({{ archive.articleNums }})
       </div>
     </nuxt-link>
   </div>

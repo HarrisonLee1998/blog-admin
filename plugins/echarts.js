@@ -2,7 +2,7 @@
  * 用到了line、bar、map
  */
 
-import Vue from 'vue'
+// import Vue from 'vue'
 
 // import '@/static/china'
 // import '@/static/world'
@@ -15,5 +15,6 @@ import Vue from 'vue'
 // import 'echarts/lib/component/legend'
 // import 'echarts/lib/component/legendScroll'
 
-import echarts from 'echarts/lib/echarts'
-Vue.prototype.$echarts = echarts
+// import echarts from 'echarts/lib/echarts'
+// import echarts from '@/static/echarts.min.js'
+// Vue.prototype.$echarts = echarts
