@@ -82,6 +82,7 @@
     </v-row>
   </v-container> -->
   <v-container>
+    <Upload class="my-2" />
     <v-row wrap justify="end" class="pr-3">
       <v-dialog v-model="dialog" max-width="500px" dense>
         <template v-slot:activator="{ on }">
@@ -140,9 +141,11 @@
 
 <script>
 import ArchiveCard from '~/components/ArchiveCard'
+import Upload from '~/components/Upload'
 export default {
   components: {
-    ArchiveCard
+    ArchiveCard,
+    Upload
   },
   async asyncData({ $axios }) {
     const { data } = await $axios.get('/api/admin/archive')

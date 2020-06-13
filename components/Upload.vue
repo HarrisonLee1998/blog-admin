@@ -54,9 +54,9 @@ export default {
         this.getQiniuUploadInfoFromServer()
       } else {
         this.qiniu_token = qiniu.token
-        this.timer = setTimeout(
+        this.timer = setInterval(
           this.getQiniuUploadInfoFromServer,
-          new Date().getTime() - new Date(qiniu.exprireDate)
+          new Date().getTime() - new Date(qiniu.exprireDate).getTime()
         )
       }
     },
@@ -69,7 +69,7 @@ export default {
           qiniu.token = res.data.map.token
           this.$store.commit('qiniu/setQiniu', qiniu)
           // 定义的50分钟
-          this.timer = setTimeout(
+          this.timer = setInterval(
             this.getQiniuUploadInfoFromServer,
             1000 * 60 * 50
           )

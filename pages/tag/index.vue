@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container>
     <div id="tag-overview">共有{{ tags.length }}个标签</div>
     <div>
       <nuxt-link
@@ -11,7 +11,7 @@
       ></nuxt-link>
       <!-- :class="isDark ? 'dark' : 'light'" -->
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>

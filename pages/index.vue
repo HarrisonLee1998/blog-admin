@@ -34,6 +34,11 @@ export default {
     PVTrend,
     UVTrend,
     Visitor
+  },
+  head() {
+    return {
+      title: '首页'
+    }
   }
 }
 </script>
