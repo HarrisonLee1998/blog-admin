@@ -104,7 +104,7 @@ module.exports = {
   },
   proxy: {
     '/api': {
-      target: 'http://harrisonlee.net:8080/blog',
+      target: 'http://127.0.0.1:8080/blog',
       pathRewrite: {
         '^/api': '/'
       }
